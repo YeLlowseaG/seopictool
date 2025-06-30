@@ -7,9 +7,12 @@ Sitemap: https://www.faviconseopro.com/sitemap.xml
 # Crawl-delay (optional, helps prevent server overload)
 Crawl-delay: 1
 
+# Allow favicon and manifest files
+Allow: /favicon.*
+Allow: /site.webmanifest
+Allow: /browserconfig.xml
+Allow: /*icon*.png
+
 # Disallow certain file types (optional)
 Disallow: *.js$
 Disallow: *.css$
-Disallow: *.png$
-Disallow: *.jpg$
-Disallow: *.gif$
