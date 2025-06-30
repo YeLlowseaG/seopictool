@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.faviconseopro.com/sitemap.xml
+
+# Crawl-delay (optional, helps prevent server overload)
+Crawl-delay: 1
+
+# Disallow certain file types (optional)
+Disallow: *.js$
+Disallow: *.css$
+Disallow: *.png$
+Disallow: *.jpg$
+Disallow: *.gif$
