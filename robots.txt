@@ -13,6 +13,6 @@ Allow: /site.webmanifest
 Allow: /browserconfig.xml
 Allow: /*icon*.png
 
-# Disallow certain file types (optional)
-Disallow: *.js$
-Disallow: *.css$
+# Allow search engines to access CSS and JS for better crawling
+Allow: *.css$
+Allow: *.js$
