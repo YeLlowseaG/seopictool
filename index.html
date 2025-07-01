@@ -1188,7 +1188,13 @@
                 const langBtn = document.getElementById('langBtn');
                 const langDropdown = document.getElementById('langDropdown');
                 
-                if (!langBtn || !langDropdown) return;
+                if (!langBtn || !langDropdown) {
+                    console.error('Language buttons not found!');
+                    return;
+                }
+                
+                // 保存this引用
+                const self = this;
                 
                 // 语言按钮点击事件
                 langBtn.addEventListener('click', (e) => {
@@ -1203,14 +1209,16 @@
                     langBtn.classList.remove('active');
                 });
                 
-                // 语言选项点击事件
-                document.querySelectorAll('.lang-option').forEach(option => {
-                    option.addEventListener('click', () => {
+                // 语言选项点击事件 - 使用事件委托
+                langDropdown.addEventListener('click', (e) => {
+                    const option = e.target.closest('.lang-option');
+                    if (option) {
                         const lang = option.getAttribute('data-lang');
-                        this.setLanguage(lang);
+                        console.log('Language clicked:', lang); // 调试日志
+                        self.setLanguage(lang);
                         langDropdown.classList.remove('show');
                         langBtn.classList.remove('active');
-                    });
+                    }
                 });
             }
         }
@@ -1348,23 +1356,23 @@
                     if (this.isOnline) {
                         indicator.classList.remove('offline');
                         if (languageManager) {
-                            text.textContent = languageManager.translate('pwa.status.online');
+                            text.textContent = languageManager.t('pwa.status.online');
                         }
                     } else {
                         indicator.classList.add('offline');
                         if (languageManager) {
-                            text.textContent = languageManager.translate('pwa.status.offline');
+                            text.textContent = languageManager.t('pwa.status.offline');
                         }
                     }
                 }
                 
                 if (pwaStatus) {
                     if (this.isOnline) {
-                        pwaStatus.textContent = languageManager ? languageManager.translate('features.pwa.online') : '🌐 在线模式';
+                        pwaStatus.textContent = languageManager ? languageManager.t('features.pwa.online') : '🌐 在线模式';
                         pwaStatus.style.background = 'rgba(76, 175, 80, 0.1)';
                         pwaStatus.style.color = '#4CAF50';
                     } else {
-                        pwaStatus.textContent = languageManager ? languageManager.translate('features.pwa.offline') : '📱 离线模式';
+                        pwaStatus.textContent = languageManager ? languageManager.t('features.pwa.offline') : '📱 离线模式';
                         pwaStatus.style.background = 'rgba(255, 152, 0, 0.1)';
                         pwaStatus.style.color = '#FF9800';
                     }
