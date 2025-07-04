@@ -14,9 +14,9 @@ const STATIC_CACHE_URLS = [
     '/favicon.svg',
     '/favicon-16x16.png',
     '/favicon-32x32.png',
-    '/apple-touch-icon.png',
+    '/apple-touch-icon-180x180.png',
     '/android-chrome-192x192.png',
-    '/android-chrome-512x512.png'
+    '/icon-512x512.png'
 ];
 
 // 安装事件 - 缓存核心资源

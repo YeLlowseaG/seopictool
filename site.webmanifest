@@ -10,13 +10,13 @@
             "purpose": "any"
         },
         {
-            "src": "/android-chrome-512x512.png",
+            "src": "/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "purpose": "any"
+            "purpose": "any maskable"
         },
         {
-            "src": "/apple-touch-icon.png",
+            "src": "/apple-touch-icon-180x180.png",
             "sizes": "180x180",
             "type": "image/png",
             "purpose": "any"
