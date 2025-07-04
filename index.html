@@ -1398,16 +1398,20 @@
                     return;
                 }
                 
-                this.deferredPrompt.prompt();
-                const { outcome } = await this.deferredPrompt.userChoice;
-                
-                if (outcome === 'accepted') {
-                    console.log('用户接受了安装提示');
-                } else {
-                    console.log('用户拒绝了安装提示');
+                try {
+                    this.deferredPrompt.prompt();
+                    const { outcome } = await this.deferredPrompt.userChoice;
+                    
+                    if (outcome === 'accepted') {
+                        console.log('用户接受了安装提示');
+                    } else {
+                        console.log('用户拒绝了安装提示');
+                    }
+                    
+                    this.deferredPrompt = null;
+                } catch (error) {
+                    console.error('PWA安装过程中出错:', error);
                 }
-                
-                this.deferredPrompt = null;
             }
             
             showInstallPrompt() {
@@ -1475,7 +1479,7 @@
                         <p style="margin-bottom: 15px; line-height: 1.6;">
                             在浏览器菜单中选择"添加到主屏幕"或"安装应用"来获得更好的体验！
                         </p>
-                        <button onclick="this.parentElement.remove()" style="
+                        <button onclick="pwaManager.closeManualInstructions()" style="
                             background: #667eea;
                             color: white;
                             border: none;
@@ -1484,7 +1488,7 @@
                             cursor: pointer;
                         ">知道了</button>
                     </div>
-                    <div onclick="this.nextElementSibling.remove(); this.remove();" style="
+                    <div onclick="pwaManager.closeManualInstructions()" style="
                         position: fixed;
                         top: 0;
                         left: 0;
@@ -1499,12 +1503,12 @@
             
             showPWAWelcome() {
                 const welcomeModal = `
-                    <div class="pwa-welcome-overlay" onclick="this.remove();">
+                    <div class="pwa-welcome-overlay" onclick="pwaManager.closePWAWelcome(event);">
                         <div class="pwa-welcome-modal" onclick="event.stopPropagation();">
                             <div class="pwa-welcome-header">
                                 <span class="pwa-welcome-icon">🚀</span>
                                 <h3 data-i18n="pwa.welcome.title">欢迎使用 FaviconSEOPro！</h3>
-                                <button class="pwa-welcome-close" onclick="this.closest('.pwa-welcome-overlay').remove();">×</button>
+                                <button class="pwa-welcome-close" onclick="pwaManager.closePWAWelcome(event);">×</button>
                             </div>
                             <div class="pwa-welcome-content">
                                 <p data-i18n="pwa.welcome.desc">这是一个现代化的PWA应用！您可以将它安装到设备上，享受更快的速度和离线使用能力。</p>
@@ -1524,10 +1528,10 @@
                                 </div>
                             </div>
                             <div class="pwa-welcome-actions">
-                                <button class="pwa-welcome-install" onclick="pwaManager.triggerInstall(); this.closest('.pwa-welcome-overlay').remove();">
+                                <button class="pwa-welcome-install" onclick="pwaManager.triggerInstall(); pwaManager.closePWAWelcome(event);">
                                     <span data-i18n="pwa.welcome.install">📱 立即安装</span>
                                 </button>
-                                <button class="pwa-welcome-later" onclick="pwaManager.markWelcomeShown(); this.closest('.pwa-welcome-overlay').remove();">
+                                <button class="pwa-welcome-later" onclick="pwaManager.markWelcomeShown(); pwaManager.closePWAWelcome(event);">
                                     <span data-i18n="pwa.welcome.later">稍后提醒</span>
                                 </button>
                             </div>
@@ -1711,6 +1715,45 @@
                 if (languageManager) {
                     languageManager.translatePage();
                 }
+            }
+            
+            closePWAWelcome(event) {
+                // 阻止事件冒泡
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                // 查找并移除遮罩层
+                const overlay = document.querySelector('.pwa-welcome-overlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+                
+                // 确保移除所有可能的遮罩层（防止重复创建）
+                const allOverlays = document.querySelectorAll('.pwa-welcome-overlay');
+                allOverlays.forEach(overlay => overlay.remove());
+                
+                // 清理样式（可选）
+                const styles = document.getElementById('pwa-welcome-styles');
+                if (styles) {
+                    styles.remove();
+                }
+                
+                // 标记已显示欢迎信息
+                this.markWelcomeShown();
+            }
+            
+            closeManualInstructions() {
+                // 查找并移除手动安装说明的遮罩层
+                const overlays = document.querySelectorAll('[style*="rgba(0,0,0,0.5)"][style*="z-index: 9999"]');
+                overlays.forEach(overlay => {
+                    const instructionDiv = overlay.nextElementSibling;
+                    if (instructionDiv) {
+                        instructionDiv.remove();
+                    }
+                    overlay.remove();
+                });
             }
             
             showInstallReminder() {
